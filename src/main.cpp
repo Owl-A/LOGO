@@ -99,7 +99,7 @@ int main () {
   glfwSetKeyCallback(window, key_callback);
 
   cursor = new Cursor(-0.9, -0.7, 0.9, 0.9, 0.01);
-  textbox = new Textbox(-0.9, -0.9, 0.9, -0.8); 
+  textbox = new Textbox(-0.9, -0.9, 0.9, -0.8, 0.0015); 
   interpreter = new Interpret(cursor->get_queue());
 
   //std::thread input = std::thread(input_thread);

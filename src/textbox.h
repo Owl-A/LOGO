@@ -133,14 +133,14 @@ public:
 
 class Textbox {
   unsigned int VAO, VBO, EBO;
-  float loX, loY, hiX, hiY;
+  float loX, loY, hiX, hiY, scale;
   char buffer[250];
   int buflen;
   Shader shader;
   TextPack textpack;
 public:
-  Textbox(float loX, float loY, float hiX, float hiY) :
-  loX(loX), hiX(hiX), loY(loY), hiY(hiY),
+  Textbox(float loX, float loY, float hiX, float hiY, float scale) :
+  loX(loX), hiX(hiX), loY(loY), hiY(hiY), scale(scale),
   shader("shaders/shader.vs", "shaders/shader.fs"),
   textpack("../fonts/NotoSans.ttf") {
 
@@ -210,7 +210,7 @@ public:
   }
 
   void render_text() {
-    textpack.render_text(buffer, buflen, 1.72, loX + 0.015, (0.7 * loY + 0.3 * hiY) , 0.0015, glm::vec3(0.1f, 0.1f, 0.1f));
+    textpack.render_text(buffer, buflen, hiX -loX -0.08, loX + 0.015, (0.7 * loY + 0.3 * hiY) , scale, glm::vec3(0.1f, 0.1f, 0.1f));
   }
 };
 
