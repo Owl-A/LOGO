@@ -210,7 +210,7 @@ public:
   }
 
   void render_text() {
-    textpack.render_text(buffer, buflen, 1.72, loX + 0.015, (0.7 * loY + 0.3 * hiY) , 0.0015, glm::vec3(0.0f, 0.0f, 0.0f));
+    textpack.render_text(buffer, buflen, 1.72, loX + 0.015, (0.7 * loY + 0.3 * hiY) , 0.0015, glm::vec3(0.1f, 0.1f, 0.1f));
   }
 };
 
