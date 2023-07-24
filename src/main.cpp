@@ -12,25 +12,24 @@
 #include "pprint.h"
 #include "interpret.h"
 #include "cursor.h"
+#include "textbox.h"
 
 #define WIDTH 600
-#define HEIGHT 600
+#define HEIGHT 640
 
 Cursor* cursor;
+Textbox* textbox;
 Interpret* interpreter;
 std::mutex mtx;
 
-void get_input() {
-  std::cout << "> ";
-  char inp[250];
-  std::cin.getline(inp, 250);
+void get_input(const char* inp) {
   Parser parser(inp);
   try{
     std::vector<AST*> ast = parser.parse();
     for ( auto it = ast.begin(); it != ast.end(); ++it) {
-      mtx.lock();
+      //mtx.lock();
       interpreter->execute(*it);
-      mtx.unlock();
+      //mtx.unlock();
     }
     for ( auto it = ast.begin(); it != ast.end(); ++it) {
       delete *it;
@@ -42,7 +41,34 @@ void get_input() {
 }
 
 void input_thread() {
-  while(true) get_input();
+  while(true) {
+    std::cout << "> ";
+    char inp[250];
+    std::cin.getline(inp, 250);
+    get_input(inp);
+  }
+}
+
+void process_input(GLFWwindow* window) {
+  if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, true);
+  }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  if (key == GLFW_KEY_BACKSPACE && action == GLFW_PRESS){
+    textbox->remove_char();
+  }
+  if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+    std::string inp = textbox->flush();
+    std::cout << inp << std::endl;
+    get_input(inp.c_str());
+  }
+}
+
+void character_callback(GLFWwindow* window, unsigned int codepoint) {
+  char ch = (char)(codepoint % 0x100);
+  textbox->add_char(ch);
 }
 
 int main () {
@@ -69,25 +95,34 @@ int main () {
   }
 
   glViewport(0, 0, WIDTH, HEIGHT);
+  glfwSetCharCallback(window, character_callback);
+  glfwSetKeyCallback(window, key_callback);
 
-  cursor = new Cursor(-0.9, -0.9, 0.9, 0.9, 0.01);
+  cursor = new Cursor(-0.9, -0.7, 0.9, 0.9, 0.01);
+  textbox = new Textbox(-0.9, -0.9, 0.9, -0.8); 
   interpreter = new Interpret(cursor->get_queue());
 
-  std::thread input = std::thread(input_thread);
+  //std::thread input = std::thread(input_thread);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   while(!glfwWindowShouldClose(window)) {
+    process_input(window);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     cursor->render_window();
     cursor->render_lines();
     cursor->render_turtle();
+    textbox->render_window();
+    textbox->render_text();
     glfwSwapBuffers(window);
     glfwPollEvents();
-    mtx.lock();
+    //mtx.lock();
     cursor->process();
-    mtx.unlock();
+    //mtx.unlock();
   }
 
-  input.join();
   glfwTerminate();
+  //input.join();
 }

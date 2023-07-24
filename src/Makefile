@@ -1,4 +1,4 @@
-flags=-lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
+flags=-lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lfreetype
 files=shader.cpp main.cpp
 
 all:
