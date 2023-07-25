@@ -132,7 +132,7 @@ public:
   Textbox(float loX, float loY, float hiX, float hiY, float scale)
       : loX(loX), hiX(hiX), loY(loY), hiY(hiY), scale(scale),
         shader("shaders/shader.vs", "shaders/shader.fs"),
-        textpack("../fonts/NotoSans.ttf") {
+        textpack("fonts/NotoSans.ttf") {
 
     float window[] = {loX, loY, hiX, loY, hiX, hiY,
                       hiX, hiY, loX, hiY, loX, loY};
