@@ -194,7 +194,7 @@ public:
 
   void render_text() {
     textpack.render_text(buffer, buflen, hiX - loX - 0.08, loX + 0.015,
-                         (0.7 * loY + 0.3 * hiY), scale,
+                         (0.7 * loY + 0.3 * hiY), scale * (hiY - loY),
                          glm::vec3(0.1f, 0.1f, 0.1f));
   }
 };
