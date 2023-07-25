@@ -4,10 +4,10 @@
 
 class SyntaxError : public std::exception {
 public:
-  Token* token;
+  Token *token;
   std::string msg;
 
-  SyntaxError(Token* token, std::string msg) : std::exception() {
+  SyntaxError(Token *token, std::string msg) : std::exception() {
     this->token = token;
     this->msg = msg;
   }
